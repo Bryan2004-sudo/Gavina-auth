@@ -1,70 +1,35 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import React from "react";
 import Link from "next/link";
 import { UserAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { user, googleSignIn, logOut } = UserAuth();
-  const [loading, setLoading] = useState(true);
-
-  const handleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await logOut();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const checkAuthentication = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      setLoading(false);
-    };
-    checkAuthentication();
-  }, [user]);
+  const { user, logOut } = UserAuth();
 
   return (
-    <div className="h-20 w-full border-b-2 flex items-center justify-between p-2">
-      <ul className="flex">
-        <li className="p-2 cursor-pointer">
-          <Link href="/">Home</Link>
-        </li>
-        <li className="p-2 cursor-pointer">
-          <Link href="/about">About</Link>
-        </li>
+    <nav className="fixed top-0 left-0 w-full h-16 bg-black/60 backdrop-blur-md border-b border-cyan-500/20 flex items-center justify-between px-8 z-50">
+      <Link
+        href="/"
+        className="text-cyan-400 text-2xl font-bold tracking-wide hover:text-white transition-all"
+      >
+        GAVINA<span className="text-white">AUTH</span>
+      </Link>
 
-        {!user ? null : (
-          <li className="p-2 cursor-pointer">
-            <Link href="/profile">Profile</Link>
+      <ul className="flex items-center gap-6 text-gray-300">
+        <li><Link href="/">Home</Link></li>
+        <li><Link href="/about">About</Link></li>
+        {user && <li><Link href="/profile">Profile</Link></li>}
+        {user && (
+          <li
+            onClick={logOut}
+            className="cursor-pointer text-red-500 hover:text-red-400 transition-all"
+          >
+            Sign Out
           </li>
         )}
       </ul>
-
-      {loading ? null : !user ? (
-        <ul className="flex">
-          <li onClick={handleSignIn} className="p-2 cursor-pointer">
-            Login
-          </li>
-          <li onClick={handleSignIn} className="p-2 cursor-pointer">
-            Sign up
-          </li>
-        </ul>
-      ) : (
-        <div>
-          <p>Welcome, {user.displayName}</p>
-          <p className="cursor-pointer" onClick={handleSignOut}>
-            Sign out
-          </p>
-        </div>
-      )}
-    </div>
+    </nav>
   );
 };
 

@@ -21,8 +21,7 @@ const page = () => {
         <Spinner />
       ) : user ? (
         <p>
-          Welcome, {user.displayName} - you are logged in to the profile page -
-          a protected route.
+          Welcome, {user.displayName} - Hi, Im Bryan Gavina
         </p>
       ) : (
         <p>You must be logged in to view this page - protected route.</p>
